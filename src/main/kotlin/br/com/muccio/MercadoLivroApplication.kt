@@ -1,4 +1,4 @@
-package br.com.muccio.mercado_livro
+package br.com.muccio
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
