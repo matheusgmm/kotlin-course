@@ -13,7 +13,7 @@ class CustomerService(
 
     fun getAll(name: String?): List<CustomerModel> {
         name?.let {
-            return customerRepository.findByNomeContaining(it)
+            return customerRepository.findByNameContaining(it)
         }
 
         return customerRepository.findAll().toList()
@@ -24,14 +24,14 @@ class CustomerService(
         customerRepository.save(customer)
     }
 
-    fun getCustomer(id: Int): CustomerModel {
+    fun getById(id: Int): CustomerModel {
         return customerRepository.findById(id).orElseThrow { NoSuchElementException("Customer with id: $id not found!") }
     }
 
     fun updateCustomer(customer: CustomerModel) {
         val findCustomer = customerRepository.findById(customer.id!!).orElseThrow { NoSuchElementException("Customer with id: ${customer.id} not found!") }
         findCustomer.let {
-            it.nome = customer.nome
+            it.name = customer.name
             it.email = customer.email
         }
         customerRepository.save(customer)
