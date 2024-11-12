@@ -2,10 +2,15 @@ package br.com.muccio.controller
 
 import br.com.muccio.controller.request.PostBookRequest
 import br.com.muccio.controller.request.PutBookRequest
+import br.com.muccio.controller.response.BookResponse
 import br.com.muccio.extension.toBookModel
-import br.com.muccio.model.BookModel
+import br.com.muccio.extension.toResponse
 import br.com.muccio.service.BookService
 import br.com.muccio.service.CustomerService
+import jakarta.validation.Valid
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
@@ -19,25 +24,25 @@ class BookController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody request: PostBookRequest) {
-        val customer = customerService.getById(request.customerId)
+    fun create(@RequestBody @Valid request: PostBookRequest) {
+        val customer = customerService.findById(request.customerId)
         bookService.create(request.toBookModel(customer))
 
     }
 
     @GetMapping
-    fun findAll(): List<BookModel> {
-        return bookService.findAll();
+    fun findAll(@PageableDefault(page = 0, size = 10) pageable: Pageable): Page<BookResponse> {
+        return bookService.findAll(pageable).map { it.toResponse() };
     }
 
     @GetMapping("/active")
-    fun findActives(): List<BookModel> {
-        return bookService.findActives()
+    fun findActives(@PageableDefault(page = 0, size = 10) pageable: Pageable): Page<BookResponse> {
+        return bookService.findActives(pageable).map { it.toResponse() }
     }
 
     @GetMapping("/{id}")
-    fun findById(@PathVariable id: Int): BookModel {
-        return bookService.findById(id)
+    fun findById(@PathVariable id: Int): BookResponse {
+        return bookService.findById(id).toResponse()
     }
 
     @DeleteMapping("/{id}")

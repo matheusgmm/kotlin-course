@@ -10,3 +10,5 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: update
+  jackson:
+    default-property-inclusion: non_null
